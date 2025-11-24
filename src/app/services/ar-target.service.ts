@@ -5,7 +5,7 @@ export interface ARTarget {
   id: string;
   user_id: string;
   name: string;
-  type: 'marker' | 'nft';
+  type: 'marker' | 'nft' | 'image';
   contenturl: string;
   markerpreset?: string;
   patternurl?: string;

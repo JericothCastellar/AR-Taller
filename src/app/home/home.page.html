@@ -9,11 +9,10 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Selector de archivo -->
   <ion-item>
     <ion-label>Seleccionar archivo</ion-label>
     <input type="file" (change)="onFileSelected($event)" />
-    <ion-button expand="block" (click)="uploadImage()">Subir</ion-button>
+    <ion-button expand="block" (click)="uploadAsset()">Subir</ion-button>
   </ion-item>
 
   <div *ngIf="isLoading" class="loading-container">
@@ -38,5 +37,7 @@
   <div *ngIf="!isLoading && targets.length === 0" class="empty-message">
     <p>No tienes targets aún. ¡Sube uno para empezar!</p>
   </div>
+
+  <ion-button expand="block" routerLink="/ar-view">Abrir AR</ion-button>
 
 </ion-content>

@@ -1,0 +1,9 @@
+<a-scene embedded arjs>
+  <ng-container *ngFor="let target of targets">
+    <a-marker *ngIf="target.type === 'marker'" type="pattern" url="{{ target.contenturl }}">
+      <a-box position="0 0.5 0" material="color: red;"></a-box>
+    </a-marker>
+    <a-image *ngIf="target.type === 'image'" src="{{ target.contenturl }}" position="0 1 0" width="1" height="1"></a-image>
+  </ng-container>
+  <a-entity camera></a-entity>
+</a-scene>

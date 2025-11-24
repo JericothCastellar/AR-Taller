@@ -29,82 +29,82 @@ export class HomePage {
     this.isLoading = true;
     const user = this.authService.getCurrentUser();
     this.currentUserId = user ? user.uid : null;
-    console.log('Usuario desde AuthService:', user);
-    console.log('UID actual en Home:', this.currentUserId);
-
     if (this.currentUserId) {
       try {
         this.targets = await this.arTargetService.getTargets(this.currentUserId);
-      } catch (err) {
-        console.error('Error cargando targets:', err);
+      } catch {
         this.targets = [];
       } finally {
         this.isLoading = false;
       }
     } else {
-      console.warn('No hay usuario logueado, redirigiendo a login');
       this.targets = [];
       this.isLoading = false;
       this.router.navigate(['/login']);
     }
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-    console.log('Archivo seleccionado:', this.selectedFile);
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0] || null;
+    this.selectedFile = file;
   }
 
-  async uploadImage() {
-    console.log('UID actual en uploadImage:', this.currentUserId);
-    console.log('Archivo en uploadImage:', this.selectedFile);
-
+  async uploadAsset() {
     if (!this.selectedFile) {
-      console.error('No file selected');
+      await this.showAlert('Subida', 'No seleccionaste archivo.');
       return;
     }
     if (!this.currentUserId) {
-      console.error('User not logged in');
       this.router.navigate(['/login']);
       return;
     }
 
+    this.isLoading = true;
     try {
-      const publicUrl = await this.supabaseService.uploadImage(this.currentUserId, this.selectedFile);
+      const originalName = this.selectedFile.name;
+      const isImage = !!(this.selectedFile.type && this.selectedFile.type.startsWith('image/'));
+      const publicUrl = isImage
+        ? await this.supabaseService.uploadImage(this.currentUserId, this.selectedFile)
+        : await this.supabaseService.uploadFile(this.currentUserId, this.selectedFile);
 
       const newTarget: Partial<ARTarget> = {
-        name: this.selectedFile.name,
-        type: 'marker',
+        name: originalName,
+        type: isImage ? 'image' : 'marker',
         contenturl: publicUrl,
         user_id: this.currentUserId,
       };
 
       await this.arTargetService.addTarget(newTarget);
       this.targets = await this.arTargetService.getTargets(this.currentUserId);
+      await this.showAlert('Subida', 'Archivo subido y target creado correctamente.');
+      this.selectedFile = null;
     } catch (error) {
-      console.error('Upload failed:', error);
+      const msg = error instanceof Error ? error.message : 'Revisa la consola.';
+      await this.showAlert('Error', 'Falló la subida: ' + msg);
+    } finally {
+      this.isLoading = false;
     }
   }
 
   async deleteTarget(target: ARTarget) {
     if (!this.currentUserId) {
-      console.error('User not logged in, cannot delete');
       this.router.navigate(['/login']);
       return;
     }
-
+    const ok = await this.confirm('Eliminar', `¿Eliminar el target "${target.name}"?`);
+    if (!ok) return;
     if (target.contenturl) {
       try {
         await this.supabaseService.deleteImage(target.contenturl);
-      } catch (err) {
-        console.error('Error deleting image:', err);
-      }
+      } catch {}
     }
-
     try {
       await this.arTargetService.deleteTarget(target.id);
       this.targets = await this.arTargetService.getTargets(this.currentUserId);
-    } catch (err) {
-      console.error('Error deleting target record:', err);
+      await this.showAlert('Eliminar', 'Target eliminado.');
+    } catch {
+      await this.showAlert('Error', 'No se pudo eliminar el target.');
     }
   }
 
@@ -113,7 +113,7 @@ export class HomePage {
       header: 'Editar Target',
       inputs: [
         { name: 'name', type: 'text', value: target.name, placeholder: 'Nombre' },
-        { name: 'type', type: 'text', value: target.type, placeholder: 'Tipo (marker/nft)' },
+        { name: 'type', type: 'text', value: target.type, placeholder: 'Tipo (marker/image/nft)' },
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
@@ -126,20 +126,44 @@ export class HomePage {
               if (this.currentUserId) {
                 this.targets = await this.arTargetService.getTargets(this.currentUserId);
               }
-            } catch (err) {
-              console.error('Error updating target:', err);
+              this.showToast('Target actualizado.');
+            } catch {
+              this.showToast('Error al actualizar.');
             }
           },
         },
       ],
     });
-
     await alert.present();
   }
 
   async logout() {
-    this.targets = []; 
+    this.targets = [];
     await this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  private async showAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({ header, message, buttons: ['OK'] });
+    await alert.present();
+  }
+
+  private async confirm(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'OK', role: 'confirm' },
+      ],
+    });
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
+  }
+
+  private async showToast(message: string) {
+    const alert = await this.alertCtrl.create({ header: 'Info', message, buttons: ['OK'] });
+    await alert.present();
   }
 }
