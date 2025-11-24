@@ -34,6 +34,7 @@ export class LoginPage implements OnInit {
       await this.authService.login(email, password);
       this.showToast('Login exitoso');
       this.navCtrl.navigateRoot('/home');
+      
     } catch (error: any) {
       this.showToast(error.message || 'Error al iniciar sesión');
     }

@@ -6,10 +6,10 @@ export interface ARTarget {
   user_id: string;
   name: string;
   type: 'marker' | 'nft';
-  markerPreset?: string;
-  patternUrl?: string;
-  nftUrlBase?: string;
-  contentUrl: string;
+  contenturl: string;
+  markerpreset?: string;
+  patternurl?: string;
+  nfturlbase?: string;
   scale?: string;
   position?: string;
   rotation?: string;
@@ -19,11 +19,11 @@ export interface ARTarget {
 export class ARTargetService {
   constructor(private supabase: SupabaseService) {}
 
-  async getTargets(): Promise<ARTarget[]> {
-    return await this.supabase.listTargets();
+  async getTargets(userId: string): Promise<ARTarget[]> {
+    return await this.supabase.listTargets(userId);
   }
 
-  async addTarget(target: ARTarget) {
+  async addTarget(target: Partial<ARTarget>) {
     return await this.supabase.saveTarget(target);
   }
 

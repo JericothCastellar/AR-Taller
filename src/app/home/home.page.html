@@ -1,20 +1,42 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Mis Targets</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <!-- Selector de archivo -->
+  <ion-item>
+    <ion-label>Seleccionar archivo</ion-label>
+    <input type="file" (change)="onFileSelected($event)" />
+    <ion-button expand="block" (click)="uploadImage()">Subir</ion-button>
+  </ion-item>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando tus targets...</p>
   </div>
+
+  <ion-list *ngIf="!isLoading && targets.length > 0">
+    <ion-item *ngFor="let target of targets">
+      <ion-label>
+        <h2>{{ target.name }}</h2>
+        <p>Tipo: {{ target.type }}</p>
+        <p>URL: {{ target.contenturl }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="editTarget(target)">Editar</ion-button>
+        <ion-button color="danger" (click)="deleteTarget(target)">Eliminar</ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!isLoading && targets.length === 0" class="empty-message">
+    <p>No tienes targets aún. ¡Sube uno para empezar!</p>
+  </div>
+
 </ion-content>
