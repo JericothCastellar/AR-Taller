@@ -20,8 +20,14 @@ export class ArViewComponent implements OnInit {
   async ngOnInit() {
     const user = this.authService.getCurrentUser();
     this.currentUserId = user ? user.uid : null;
+
     if (this.currentUserId) {
-      this.targets = await this.arTargetService.getTargets(this.currentUserId);
+      try {
+        this.targets = await this.arTargetService.getTargets(this.currentUserId);
+        console.log('Targets cargados:', this.targets);
+      } catch (err) {
+        console.error('Error cargando targets:', err);
+      }
     }
   }
 }
