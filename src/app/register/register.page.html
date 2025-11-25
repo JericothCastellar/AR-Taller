@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding register-container">
+<ion-content class="register-container">
   <div class="form-wrapper">
     <h2 class="title">Crear cuenta</h2>
     <p class="subtitle">Regístrate para continuar</p>
@@ -14,11 +14,17 @@
         <ion-label position="floating">Correo electrónico</ion-label>
         <ion-input type="email" formControlName="email"></ion-input>
       </ion-item>
+      <div class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+        {{ getErrorMessage('email') }}
+      </div>
 
       <ion-item>
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
+      <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+        {{ getErrorMessage('password') }}
+      </div>
 
       <ion-button expand="block" type="submit" [disabled]="registerForm.invalid">
         Registrarse

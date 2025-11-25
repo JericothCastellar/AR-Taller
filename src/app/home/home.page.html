@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Mis Targets</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">Cerrar sesión</ion-button>
@@ -7,13 +7,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="home-container ion-padding">
 
-  <ion-item>
-    <ion-label>Seleccionar archivo</ion-label>
-    <input type="file" (change)="onFileSelected($event)" />
+  <div class="upload-section">
+    <ion-item>
+      <ion-label>Seleccionar archivo</ion-label>
+      <input type="file" (change)="onFileSelected($event)" />
+    </ion-item>
     <ion-button expand="block" (click)="uploadAsset()">Subir</ion-button>
-  </ion-item>
+  </div>
 
   <div *ngIf="isLoading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>

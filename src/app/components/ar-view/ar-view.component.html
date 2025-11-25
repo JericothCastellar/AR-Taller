@@ -3,7 +3,6 @@
   arjs="sourceType: webcam; detectionMode: mono; debugUIEnabled: false"
   renderer="colorManagement: true; physicallyCorrectLights: false"
 >
-  <!-- Assets: aquí se cargan las imágenes -->
   <a-assets timeout="15000" crossorigin="anonymous">
     <ng-container *ngFor="let t of targets">
       <img
@@ -15,14 +14,11 @@
     </ng-container>
   </a-assets>
 
-  <!-- Renderizado dinámico -->
   <ng-container *ngFor="let target of targets">
-    <!-- Marker .patt -->
     <a-marker *ngIf="target.type === 'marker'" type="pattern" [attr.url]="target.contenturl">
       <a-box position="0 0.5 0" material="color: red;"></a-box>
     </a-marker>
 
-    <!-- Imagen como textura en un plano -->
     <a-plane
       *ngIf="target.type === 'image'"
       [attr.src]="'#img-' + target.id"
@@ -35,6 +31,5 @@
     ></a-plane>
   </ng-container>
 
-  <!-- Cámara -->
   <a-entity camera="fov:60" position="0 1.6 0"></a-entity>
 </a-scene>
