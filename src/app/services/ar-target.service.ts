@@ -3,17 +3,20 @@ import { SupabaseService } from './supabase.service';
 
 export interface ARTarget {
   id: string;
-  user_id: string;
   name: string;
-  type: 'marker' | 'nft' | 'image';
-  contenturl: string;
-  markerpreset?: string;
-  patternurl?: string;
+  type: 'nft' | 'marker' | 'image';
+  user_id: string;
   nfturlbase?: string;
+  patternurl?: string;
+  contenturl?: string;
   scale?: string;
   position?: string;
   rotation?: string;
+  width?: string;
+  height?: string;
+  markerpreset?: string;
 }
+
 
 @Injectable({ providedIn: 'root' })
 export class ARTargetService {

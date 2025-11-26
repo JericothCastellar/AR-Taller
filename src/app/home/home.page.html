@@ -11,10 +11,13 @@
 
   <div class="upload-section">
     <ion-item>
-      <ion-label>Seleccionar archivo</ion-label>
-      <input type="file" (change)="onFileSelected($event)" />
+      <ion-label>Seleccionar archivos</ion-label>
+      <!-- Input múltiple para NFT (.iset, .fset, .fset3), .patt y .jpg/.png -->
+      <input type="file" (change)="onFilesSelected($event)" multiple />
     </ion-item>
-    <ion-button expand="block" (click)="uploadAsset()">Subir</ion-button>
+    <p class="info-text">
+      Puedes subir los 3 archivos NFT juntos (.iset, .fset, .fset3), un marker (.patt) o una imagen (.jpg/.png).
+    </p>
   </div>
 
   <div *ngIf="isLoading" class="loading-container">
@@ -27,7 +30,9 @@
       <ion-label>
         <h2>{{ target.name }}</h2>
         <p>Tipo: {{ target.type }}</p>
-        <p>URL: {{ target.contenturl }}</p>
+        <p *ngIf="target.contenturl">URL: {{ target.contenturl }}</p>
+        <p *ngIf="target.patternurl">Pattern: {{ target.patternurl }}</p>
+        <p *ngIf="target.nfturlbase">NFT Base: {{ target.nfturlbase }}</p>
       </ion-label>
       <ion-buttons slot="end">
         <ion-button color="primary" (click)="editTarget(target)">Editar</ion-button>

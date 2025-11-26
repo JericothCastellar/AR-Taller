@@ -1,35 +1,70 @@
+<!-- Loader mientras carga -->
+<div *ngIf="loading" class="arjs-loader">
+  <div>Cargando AR...</div>
+</div>
+
+<!-- Mensajes de error -->
+<div *ngIf="error" class="error-message">
+  {{ error }}
+</div>
+
 <a-scene
   embedded
-  arjs="sourceType: webcam; detectionMode: mono; debugUIEnabled: false"
-  renderer="colorManagement: true; physicallyCorrectLights: false"
+  arjs="trackingMethod: best; sourceType: webcam; sourceWidth:1280; sourceHeight:720; debugUIEnabled: false;"
 >
-  <a-assets timeout="15000" crossorigin="anonymous">
-    <ng-container *ngFor="let t of targets">
-      <img
-        *ngIf="t.type === 'image'"
-        [attr.id]="'img-' + t.id"
-        [attr.src]="t.contenturl"
-        crossorigin="anonymous"
-      />
-    </ng-container>
-  </a-assets>
+  <ng-container *ngFor="let target of targets; trackBy: trackByTargetId">
 
-  <ng-container *ngFor="let target of targets">
-    <a-marker *ngIf="target.type === 'marker'" type="pattern" [attr.url]="target.contenturl">
-      <a-box position="0 0.5 0" material="color: red;"></a-box>
+    <!-- MARKER -->
+    <a-marker
+      *ngIf="target.type === 'marker'"
+      [attr.preset]="target.markerpreset"
+      [attr.url]="target.patternurl"
+      emitevent="true"
+    >
+      <a-plane
+        [attr.src]="target.contenturl"
+        [attr.width]="getWidth(target)"
+        [attr.height]="getHeight(target)"
+        [attr.position]="target.position || '0 0 0.1'"
+        [attr.rotation]="target.rotation || '0 0 0'"
+        material="side:double; transparent:true; opacity:1"
+      ></a-plane>
     </a-marker>
 
+    <!-- NFT -->
+    <a-nft
+      *ngIf="target.type === 'nft'"
+      type="nft"
+      [attr.url]="target.nfturlbase"
+      emitevent="true"
+      smooth="true"
+      smoothCount="15"
+      smoothTolerance="0.02"
+      smoothThreshold="10"
+    >
+      <a-plane
+        [attr.src]="target.contenturl"
+        [attr.width]="getWidth(target)"
+        [attr.height]="getHeight(target)"
+        [attr.position]="target.position || '0 0 0.1'"
+        [attr.rotation]="target.rotation || '0 0 0'"
+        material="side:double; transparent:true; opacity:1"
+      ></a-plane>
+    </a-nft>
+
+    <!-- IMAGE -->
     <a-plane
       *ngIf="target.type === 'image'"
-      [attr.src]="'#img-' + target.id"
-      position="0 1 -3"
-      width="1.5"
-      height="2"
-      rotation="0 0 0"
-      scale="1 1 1"
+      [attr.src]="target.contenturl"
+      [attr.width]="getWidth(target)"
+      [attr.height]="getHeight(target)"
+      [attr.position]="target.position || '0 1 -3'"
+      [attr.rotation]="target.rotation || '0 0 0'"
       material="side:double; transparent:true; opacity:1"
     ></a-plane>
+
   </ng-container>
 
-  <a-entity camera="fov:60" position="0 1.6 0"></a-entity>
+  <!-- Cámara principal -->
+  <a-entity camera></a-entity>
 </a-scene>
