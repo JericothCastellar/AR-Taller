@@ -1,9 +1,7 @@
-<!-- Loader mientras carga -->
 <div *ngIf="loading" class="arjs-loader">
   <div>Cargando AR...</div>
 </div>
 
-<!-- Mensajes de error -->
 <div *ngIf="error" class="error-message">
   {{ error }}
 </div>
@@ -14,7 +12,6 @@
 >
   <ng-container *ngFor="let target of targets; trackBy: trackByTargetId">
 
-    <!-- MARKER -->
     <a-marker
       *ngIf="target.type === 'marker'"
       [attr.preset]="target.markerpreset"
@@ -31,7 +28,6 @@
       ></a-plane>
     </a-marker>
 
-    <!-- NFT -->
     <a-nft
       *ngIf="target.type === 'nft'"
       type="nft"
@@ -52,7 +48,6 @@
       ></a-plane>
     </a-nft>
 
-    <!-- IMAGE -->
     <a-plane
       *ngIf="target.type === 'image'"
       [attr.src]="target.contenturl"
@@ -65,6 +60,5 @@
 
   </ng-container>
 
-  <!-- Cámara principal -->
   <a-entity camera></a-entity>
 </a-scene>

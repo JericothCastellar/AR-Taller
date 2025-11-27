@@ -93,7 +93,6 @@ export class HomePage {
 
         const publicBaseUrl = `${environment.supabaseUrl}/storage/v1/object/public/ar-assets/${encodeURIComponent(folder)}`;
 
-        // Valores de ejemplo: ARToolkit reportó 616x900 en tus logs
         const markerWidth = 616;
         const markerHeight = 900;
 

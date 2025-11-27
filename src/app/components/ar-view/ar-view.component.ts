@@ -15,7 +15,6 @@ export class ArViewComponent implements OnInit, AfterViewInit, OnDestroy {
   loading = true;
   error: string | null = null;
 
-  // estado de detección
   private detected = false;
   private intervalId: any;
 
@@ -54,14 +53,12 @@ export class ArViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // cada 5 segundos, si no hay detección, loguea mensaje
     this.intervalId = setInterval(() => {
       if (!this.detected) {
         console.log('No hemos detectado ninguna imagen');
       }
     }, 5000);
 
-    // enganchar eventos de markers y nft
     const sceneEl = document.querySelector('a-scene');
     if (sceneEl) {
       sceneEl.addEventListener('markerFound', () => {
@@ -85,25 +82,24 @@ export class ArViewComponent implements OnInit, AfterViewInit, OnDestroy {
     return target.id;
   }
 
-  // Ahora usamos directamente los valores width y height sin dividir
   getWidth(target: ARTarget): string {
     if (target.width) {
-      return target.width; // Ejemplo: "616"
+      return target.width; // 
     }
     if (target.scale) {
       const parts = target.scale.split(' ');
-      return parts[0] || '20'; // valor por defecto más grande
+      return parts[0] || '20'; 
     }
     return '20';
   }
 
   getHeight(target: ARTarget): string {
     if (target.height) {
-      return target.height; // Ejemplo: "900"
+      return target.height; 
     }
     if (target.scale) {
       const parts = target.scale.split(' ');
-      return parts[1] || '30'; // valor por defecto más grande
+      return parts[1] || '30'; 
     }
     return '30';
   }

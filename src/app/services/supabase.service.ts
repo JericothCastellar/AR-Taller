@@ -65,12 +65,12 @@ export class SupabaseService {
       try {
         const res = await fetch(url, { method: 'HEAD' });
         if (res.ok) {
-          console.log(`✅ Descriptor encontrado: ${url}`);
+          console.log(`Descriptor encontrado: ${url}`);
         } else {
-          console.error(`❌ Error ${res.status} al acceder: ${url}`);
+          console.error(`Error ${res.status} al acceder: ${url}`);
         }
       } catch (err) {
-        console.error(`⚠️ Fallo al intentar acceder a ${url}`, err);
+        console.error(`Fallo al intentar acceder a ${url}`, err);
       }
     }
   }
@@ -102,7 +102,7 @@ export class SupabaseService {
         await this.deleteFile(data.patternurl);
       }
     } catch (fileErr) {
-      console.warn('⚠️ Error eliminando archivos del bucket:', fileErr);
+      console.warn('Error eliminando archivos del bucket:', fileErr);
     }
 
     const { error: delError } = await this.supabase.from('targets').delete().eq('id', id);

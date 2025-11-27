@@ -2,7 +2,10 @@
   <ion-toolbar color="primary">
     <ion-title>Mis Targets</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar sesión
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,17 +15,11 @@
   <div class="upload-section">
     <ion-item>
       <ion-label>Seleccionar archivos</ion-label>
-      <!-- Input múltiple para NFT (.iset, .fset, .fset3), .patt y .jpg/.png -->
       <input type="file" (change)="onFilesSelected($event)" multiple />
     </ion-item>
     <p class="info-text">
       Puedes subir los 3 archivos NFT juntos (.iset, .fset, .fset3), un marker (.patt) o una imagen (.jpg/.png).
     </p>
-  </div>
-
-  <div *ngIf="isLoading" class="loading-container">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Cargando tus targets...</p>
   </div>
 
   <ion-list *ngIf="!isLoading && targets.length > 0">
@@ -35,8 +32,14 @@
         <p *ngIf="target.nfturlbase">NFT Base: {{ target.nfturlbase }}</p>
       </ion-label>
       <ion-buttons slot="end">
-        <ion-button color="primary" (click)="editTarget(target)">Editar</ion-button>
-        <ion-button color="danger" (click)="deleteTarget(target)">Eliminar</ion-button>
+        <ion-button color="primary" (click)="editTarget(target)">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button color="danger" (click)="deleteTarget(target)">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Eliminar
+        </ion-button>
       </ion-buttons>
     </ion-item>
   </ion-list>
@@ -45,6 +48,9 @@
     <p>No tienes targets aún. ¡Sube uno para empezar!</p>
   </div>
 
-  <ion-button expand="block" routerLink="/ar-view">Abrir AR</ion-button>
+  <ion-button expand="block" routerLink="/ar-view">
+    <ion-icon name="rocket-outline" slot="start"></ion-icon>
+    Abrir AR
+  </ion-button>
 
 </ion-content>
